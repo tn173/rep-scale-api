@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::group([
+            'prefix' => 'user',
+            'where'  => [
+                'user_id' => '[0-9]+',
+            ],
+            'middleware' => ['auth']
+        ], function (): void {
+            Route::post('/info/get', 'User\InfoController@index')->name('user.info.get');
+        });
