@@ -36,8 +36,6 @@ class UserMeasurement extends Model
         // 'fat_control',
         // 'muscle_control',
         // 'muscle_mass_rate',
-        'created_at',
-        'updated_at',
     ];
 }
 

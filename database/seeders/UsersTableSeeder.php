@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\UserInfo;
 use App\Models\UserMeasurement;
+use App\Models\UserHealthcare;
 use Illuminate\Support\Arr;
 
 class UsersTableSeeder extends Seeder
@@ -24,6 +25,7 @@ class UsersTableSeeder extends Seeder
         DB::table('users')->truncate();
         DB::table('user_infos')->truncate();
         DB::table('user_measurements')->truncate();
+        DB::table('user_healthcares')->truncate();
 
         // 仮データ
         for ($num = 1; $num < 11; $num++){
@@ -31,11 +33,18 @@ class UsersTableSeeder extends Seeder
             $birthday = mt_rand(0,1262055681);
             $height = mt_rand(150,190);
 
-            User::create([
-                'name' => Str::random(10),
-                'mail' => Str::random(10).'@gmail.com',
-                'password' => Str::random(10),
-            ]);
+            if($num == 1){
+                // てすとよう
+                User::create([
+                    'mail' => 'tomoaki.nishioka@upswell.jp',
+                    'password' => Hash::make('upsw2020'),
+                ]);
+            }else{
+                User::create([
+                    'mail' => Str::random(10).'@gmail.com',
+                    'password' => Hash::make(Str::random(10)),
+                ]);
+            }
 
             UserInfo::create([
                 'user_id' => $num,
@@ -47,13 +56,19 @@ class UsersTableSeeder extends Seeder
             for ($i = 1; $i < 31; $i++){
                 $date = mt_rand(1596752413,1607293213);
                 $weight = mt_rand(40,90);
+                $steps = mt_rand(2000,5000);
                 UserMeasurement::create([
                     'user_id' => $num,
                     'date' => date("Y/m/d",$date),
                     'weight' => $weight,
                 ]);
+                UserHealthcare::create([
+                    'user_id' => $num,
+                    'date' => date("Y/m/d",$date),
+                    'steps' => $steps,
+                ]);
             }
 
-          }
+        }
     }
 }

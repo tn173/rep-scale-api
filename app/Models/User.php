@@ -3,17 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model
+class User extends Authenticatable
 {
+
     protected $fillable = [
-        'user_id',
-        'name',
         'mail',
         'password',
-        'created_at',
-        'updated_at',
+        'api_token',
+    ];
+
+    protected $hidden = [
+        'password', 'api_token',
     ];
 
     public function info(): HasOne
@@ -21,9 +25,14 @@ class User extends Model
         return $this->hasOne(UserInfo::class);
     }
 
-    public function measurement(): HasOne
+    public function measurement(): HasMany
     {
-        return $this->hasOne(UserMeasurement::class);
+        return $this->hasMany(UserMeasurement::class);
+    }
+
+    public function healthcare(): HasMany
+    {
+        return $this->hasMany(UserHealthcare::class);
     }
 
 }

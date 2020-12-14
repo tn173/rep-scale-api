@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserInfo extends Model
+class UserHealthcare extends Model
 {
     protected $fillable = [
         'user_id',
-        'gender',
-        'birthday',
-        'height',
+        'date',
+        'steps',
+        'created_at',
+        'updated_at',
     ];
 }

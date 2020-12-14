@@ -14,10 +14,19 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->increments('user_id')->comment('ユーザーID');
-            $table->string('name', 100)->comment('名前');
-            $table->string('mail', 100)->unique()->comment('mail');
+            $table->increments('id')->comment('ユーザーID');
+            $table->string('mail', 100)->unique()->comment('mail')->unique();;
             $table->string('password', 100)->comment('password');
+            $table->timestamps();
+            $table->string('api_token',60)->unique()->nullable();
+        });
+
+        Schema::create('mail_verifications', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('mail', 100)->unique()->comment('mail')->unique();;
+            $table->string('password', 100)->comment('password');
+            $table->string('tfa_token')->nullable();
+            $table->dateTime('tfa_expiration')->nullable();
             $table->timestamps();
         });
 
@@ -25,7 +34,7 @@ class CreateUsersTable extends Migration
             $table->increments('id')->comment('id');
             $table->integer('user_id')->comment('ユーザーID');
             $table->enum('gender', ['MALE', 'FEMALE', 'OTHER'])->nullable()->comment('性別');
-            $table->dateTime('birthday')->nullable()->comment('生年月日');
+            $table->date('birthday')->nullable()->comment('生年月日');
             $table->double('height')->nullable()->comment('身長');
             $table->timestamps();
         });
@@ -64,6 +73,14 @@ class CreateUsersTable extends Migration
             $table->double('muscle_mass_rate')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('user_healthcares', function (Blueprint $table) {
+            $table->increments('id')->comment('id');
+            $table->integer('user_id')->comment('ユーザーID');
+            $table->dateTime('date')->comment('日時');
+            $table->double('steps')->comment('歩数');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -74,7 +91,9 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
+        Schema::dropIfExists('mail_verifications');
         Schema::dropIfExists('user_infos');
         Schema::dropIfExists('user_measurements');
+        Schema::dropIfExists('user_healthcares');
     }
 }
