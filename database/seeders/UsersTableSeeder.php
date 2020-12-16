@@ -11,6 +11,7 @@ use App\Models\UserInfo;
 use App\Models\UserMeasurement;
 use App\Models\UserHealthcare;
 use Illuminate\Support\Arr;
+use Carbon\Carbon;
 
 class UsersTableSeeder extends Seeder
 {
@@ -22,10 +23,12 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         // 一旦全てクリア
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('users')->truncate();
         DB::table('user_infos')->truncate();
         DB::table('user_measurements')->truncate();
         DB::table('user_healthcares')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         // 仮データ
         for ($num = 1; $num < 11; $num++){
@@ -54,12 +57,12 @@ class UsersTableSeeder extends Seeder
             ]);
 
             for ($i = 1; $i < 31; $i++){
-                $date = mt_rand(1596752413,1607293213);
+                $date = mt_rand(Carbon::now()->subMonths(1)->timestamp,Carbon::now()->timestamp);
                 $weight = mt_rand(40,90);
                 $steps = mt_rand(2000,5000);
                 UserMeasurement::create([
                     'user_id' => $num,
-                    'date' => date("Y/m/d",$date),
+                    'date' => date("Y/m/d H:i:s",$date),
                     'weight' => $weight,
                 ]);
                 UserHealthcare::create([

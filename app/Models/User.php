@@ -16,9 +16,9 @@ class User extends Authenticatable
         'api_token',
     ];
 
-    protected $hidden = [
-        'password', 'api_token',
-    ];
+    // protected $hidden = [
+    //     'password', 'api_token',
+    // ];
 
     public function info(): HasOne
     {

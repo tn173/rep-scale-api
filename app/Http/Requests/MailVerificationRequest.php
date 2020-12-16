@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MailVerificationRequest extends FormRequest
+class MailVerificationRequest extends ApiRequest
 {
     public function authorize()
     {
@@ -27,10 +27,11 @@ class MailVerificationRequest extends FormRequest
     public function messages()
     {
         return [
-            'mail.required'        => 'メールアドレスは必ず指定してください',
-            'password.required'        => 'パスワードは必ず指定してください',
-            'password_confirmation.required' => '確認用パスワードは必ず指定してください',
-            'password_confirmation.same' => 'パスワードが間違っています',
+            'mail.required'                     => 'メールアドレスは必ず指定してください',
+            'password.required'                 => 'パスワードは必ず指定してください',
+            'password.min'                      => '新しいパスワードは必ず8文字以上にしてください',
+            'password_confirmation.required'    => '確認用パスワードは必ず指定してください',
+            'password_confirmation.same'        => 'パスワードが間違っています',
         ];
     }
 }

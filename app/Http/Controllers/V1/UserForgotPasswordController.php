@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\TwoFactorAuthPassword;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class UserForgotPasswordController extends Controller
 {
@@ -72,7 +73,7 @@ class UserForgotPasswordController extends Controller
 
     public function update(ForgotPasswordRequest $request) {  // パスワードのリセット
         $user = \App\Models\User::where('mail','=',$request->mail)->first();
-        $user->password = $request->password;
+        $user->password = Hash::make($request->password);
         $user->save();
 
         return [

@@ -72,12 +72,12 @@ class UserRegisterController extends Controller
                 $user->save();
 
                 $result = true;
-
+                $new_user->delete();
             }
 
         }
 
-        return $result ? ['result' => $result,'api_token' => $user->api_token] : ['result' => $result];
+        return $result ? ['result' => $result, 'api_token' => $user->api_token, 'user_id' => $user->id] : ['result' => $result];
 
     }
 }

@@ -32,7 +32,6 @@ class CreateUsersTable extends Migration
 
         Schema::create('user_infos', function (Blueprint $table) {
             $table->increments('id')->comment('id');
-            $table->integer('user_id')->comment('ユーザーID');
             $table->enum('gender', ['MALE', 'FEMALE', 'OTHER'])->nullable()->comment('性別');
             $table->date('birthday')->nullable()->comment('生年月日');
             $table->double('height')->nullable()->comment('身長');
@@ -41,7 +40,6 @@ class CreateUsersTable extends Migration
 
         Schema::create('user_measurements', function (Blueprint $table) {
             $table->increments('id')->comment('id');
-            $table->integer('user_id')->comment('ユーザーID');
             $table->dateTime('date')->comment('測定日時');
             $table->double('weight');
             $table->double('BMI')->nullable();
@@ -76,7 +74,6 @@ class CreateUsersTable extends Migration
 
         Schema::create('user_healthcares', function (Blueprint $table) {
             $table->increments('id')->comment('id');
-            $table->integer('user_id')->comment('ユーザーID');
             $table->dateTime('date')->comment('日時');
             $table->double('steps')->comment('歩数');
             $table->timestamps();

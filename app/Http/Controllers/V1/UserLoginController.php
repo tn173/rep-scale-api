@@ -68,7 +68,8 @@ class UserLoginController extends Controller
 
         return [
             'result' => $result,
-            'api_token' => $user->api_token
+            'api_token' => $user->api_token, 
+            'user_id' => $user->id
         ];
 
     }

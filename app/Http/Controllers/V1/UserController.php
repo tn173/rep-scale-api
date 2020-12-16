@@ -10,10 +10,12 @@ use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
-  public function index()
+  public function delete($id)
   {
-    $user = User::all();
-    return $user;
+    $user = \App\Models\User::find($id)->delete();
+    return [
+      'result' => true
+    ];
   }
 
 }
