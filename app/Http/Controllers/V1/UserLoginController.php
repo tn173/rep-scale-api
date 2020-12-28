@@ -57,7 +57,7 @@ class UserLoginController extends Controller
                 
                 $user->tfa_token = null;
                 $user->tfa_expiration = null;
-                $user->api_token = Str::random(60);
+                $user->api_token = Str::uuid();
                 $user->save();
 
                 $result = true;
