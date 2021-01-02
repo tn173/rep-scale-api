@@ -12,7 +12,7 @@ services:
       - api-server
     restart: always
     environment:
-      STAGE: 'production'
+      # STAGE: 'production'
       DOMAINS: 'stg.api.upsw.cc -> http://api-server'
     volumes:
       - ./infra/ssl-certs:/var/lib/https-portal
