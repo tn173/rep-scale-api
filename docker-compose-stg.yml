@@ -12,8 +12,8 @@ services:
       - api-server
     restart: always
     environment:
-      STAGE: production
-      DOMAINS: '54.168.75.199/ -> http://api-server'
+      STAGE: 'production'
+      DOMAINS: '54.168.75.199 -> http://api-server'
     volumes:
       - ./infra/ssl-certs:/var/lib/https-portal
 
