@@ -3,19 +3,21 @@ volumes:
   php-fpm-socket:
   db-store:
 services:
-  https-portal:
-    image: steveltn/https-portal:1
-    ports:
-      - 82:81
-      - 443:443
-    links:
-      - api-server
-    restart: always
-    environment:
-      # STAGE: 'production'
-      DOMAINS: 'stg.api.upsw.cc -> http://api-server'
-    volumes:
-      - ./infra/ssl-certs:/var/lib/https-portal
+  # https-portal:
+  #   image: steveltn/https-portal:1
+  #   ports:
+  #     - 82:81
+  #     - 443:443
+  #   links:
+  #     - api-server
+  #   restart: always
+  #   extra_hosts:
+  #     - 'stg.api.upsw.cc:127.0.0.1'
+  #   environment:
+  #     # STAGE: 'production'
+  #     DOMAINS: 'stg.api.upsw.cc -> http://api-server'
+  #   volumes:
+  #     - ./infra/ssl-certs:/var/lib/https-portal
 
   # upsw
   api-server:
