@@ -1,4 +1,4 @@
-FROM php:7.3.0-apache
+FROM php:7.2-apache
 
 COPY ./infra/api.upsw/etc/php.ini /usr/local/etc/php/php.ini
 COPY ./infra/api.upsw/etc/httpd/conf.d/*.conf /etc/apache2/sites-enabled/
@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libxml2-dev \
         libmagickwand-dev \
         libzip-dev \
+        libmcrypt-dev \
   && docker-php-ext-install -j$(nproc) \
         pdo \
         pdo_mysql \
