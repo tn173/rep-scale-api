@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 Route::group(['prefix' => 'v1'], function() {
     Route::group([
         'prefix' => 'user',
-        'middleware' => ['auth:api']
+        'middleware' => ['auth']
     ], function() {
         Route::post('/info/get/{user_id}', 'UserInfoController@index')->name('user.info.get');
         Route::post('/info/store/{user_id}', 'UserInfoController@store')->name('user.info.store');
