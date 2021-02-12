@@ -17,10 +17,11 @@ Route::group(['prefix' => 'v1'], function() {
         'prefix' => 'user',
         'middleware' => ['auth']
     ], function() {
-        Route::post('/info/get/{user_id}', 'UserInfoController@index')->name('user.info.get');
-        Route::post('/info/store/{user_id}', 'UserInfoController@store')->name('user.info.store');
-        Route::post('/info/update/{user_id}', 'UserInfoController@update')->name('user.info.update');
-        Route::post('/password/update/{user_id}', 'UserPasswordController@update')->name('user.password.update');
+        Route::post('/update/{user_id}', 'UserController@update')->name('user.update');
+        Route::post('/password/update/first_auth/{user_id}', 'UserPasswordController@first_auth')->name('user.password.update.first_auth');
+        Route::post('/password/update/second_auth/{user_id}', 'UserPasswordController@second_auth')->name('user.password.update.second_auth');
+        Route::post('/signup/first_auth/{user_id}', 'UserSignupController@first_auth')->name('user.signup.first_auth');
+        Route::post('/signup/second_auth/{user_id}', 'UserSignupController@second_auth')->name('user.signup.second_auth');
         Route::post('/graph/get/{user_id}', 'UserGraphController@index')->name('user.graph.get');
         Route::post('/graph/store/{user_id}', 'UserGraphController@store')->name('user.graph.store');
         Route::post('/all/delete/{user_id}', 'UserController@delete')->name('user.all.delete');
@@ -28,8 +29,7 @@ Route::group(['prefix' => 'v1'], function() {
 
     // ログイン前の処理
     Route::group([], function () {
-        Route::post('/register/first_auth','UserRegisterController@first_auth')->name('register.first_auth');
-        Route::post('/register/second_auth','UserRegisterController@second_auth')->name('register.second_auth');
+        Route::post('/user/create','UserController@create')->name('user.create');
         Route::post('/login/first_auth','UserLoginController@first_auth')->name('login.first_auth');
         Route::post('/login/second_auth','UserLoginController@second_auth')->name('login.second_auth');
         Route::post('/forgot_password/first_auth','UserForgotPasswordController@first_auth')->name('forgot_password.first_auth');

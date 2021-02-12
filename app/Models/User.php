@@ -11,19 +11,13 @@ class User extends Authenticatable
 {
 
     protected $fillable = [
+        'gender',
+        'birthday',
+        'heigt',
         'mail',
         'password',
         'api_token',
     ];
-
-    // protected $hidden = [
-    //     'password', 'api_token',
-    // ];
-
-    public function info(): HasOne
-    {
-        return $this->hasOne(UserInfo::class);
-    }
 
     public function measurement(): HasMany
     {

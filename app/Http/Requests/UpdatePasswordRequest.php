@@ -18,6 +18,7 @@ class UpdatePasswordRequest extends ApiRequest
     public function rules()
     {
         return [
+            'mail'                      => ['required'],
             'password'                  => ['required'],
             'new_password'              => ['required', 'min:8','different:password'],
             'new_password_confirmation' => ['required', 'same:new_password'],
@@ -27,6 +28,7 @@ class UpdatePasswordRequest extends ApiRequest
     public function messages()
     {
         return [
+            'mail.required'                      => 'メールアドレスは必ず指定してください',
             'password.required'                  => '現在のパスワードは必ず指定してください',
             'new_password.required'              => '新しいパスワードは必ず指定してください',
             'new_password.min'                   => '新しいパスワードは必ず8文字以上にしてください',

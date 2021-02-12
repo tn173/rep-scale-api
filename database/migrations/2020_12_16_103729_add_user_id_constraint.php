@@ -13,12 +13,7 @@ class AddUserIdConstraint extends Migration
      */
     public function up()
     {
-        Schema::table('user_infos', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned()->comment('ユーザーID');
-            $table->foreign('user_id')
-            ->references('id')->on('users')
-            ->onDelete('cascade');
-        });
+
 
         Schema::table('user_measurements', function (Blueprint $table) {
             $table->integer('user_id')->unsigned()->comment('ユーザーID');
@@ -42,9 +37,6 @@ class AddUserIdConstraint extends Migration
      */
     public function down()
     {
-        Schema::table('user_infos', function (Blueprint $table) {
-            $table->dropForeign('user_infos_user_id_foreign');
-        });
 
         Schema::table('user_measurements', function (Blueprint $table) {
             $table->dropForeign('user_measurements_user_id_foreign');
