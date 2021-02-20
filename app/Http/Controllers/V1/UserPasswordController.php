@@ -14,10 +14,10 @@ use App\Mail\TwoFactorAuthPassword;
 class UserPasswordController extends Controller
 {
 
-    public function first_auth(UpdatePasswordRequest $request, $id) {  // １段階目の認証
+    public function first_auth(UpdatePasswordRequest $request) {  // １段階目の認証
 
         $validated = $request->validated();
-        $user = \App\Models\User::find($id);
+        $user = \App\Models\User::find($request->user_id);
 
         if(Hash::check($request->password, $user->password)){
             $random_password = '';
@@ -26,27 +26,22 @@ class UserPasswordController extends Controller
                 $random_password .= strval(rand(0, 9));
             }
 
-            // すでにある場合はアップデート
-            if(\App\Models\MailVerification::where('mail','=',$request->mail)->exists()){
-                $mail_verification = \App\Models\MailVerification::where('mail','=',$request->mail)->first();
-                $mail_verification->tfa_token = $random_password;            
-                $mail_verification->tfa_expiration = now()->addMinutes(10);  
-                $mail_verification->save();
-            }else{
-                $mail_verification = new \App\Models\MailVerification;
-                $mail_verification->mail = $request->mail;
-                $mail_verification->password = Hash::make($request->password);
-                $mail_verification->tfa_token = $random_password;            
-                $mail_verification->tfa_expiration = now()->addMinutes(10);  
-                $mail_verification->save();
+            // すでにそのユーザーのメール認証がある場合は削除しておく
+            if(\App\Models\UserMailVerification::where('user_id','=', $user->id)->exists()){
+                \App\Models\UserMailVerification::where('user_id','=', $user->id)->delete();
             }
 
+            $mail_verification = new \App\Models\UserMailVerification;
+            $mail_verification->user_id = $user->id;
+            $mail_verification->tfa_token = $random_password;            
+            $mail_verification->tfa_expires_at = now()->addMinutes(10);  
+            $mail_verification->save();
+
             // メール送信
-            \Mail::to($mail_verification->mail)->send(new TwoFactorAuthPassword($random_password));
+            \Mail::to($request->mail)->send(new TwoFactorAuthPassword($random_password));
 
             return [
                 'result' => true,
-                'mail' => $mail_verification->mail
             ];
         }
 
@@ -56,19 +51,19 @@ class UserPasswordController extends Controller
 
     }
 
-    public function second_auth(Request $request, $id) {  // ２段階目の認証
+    public function second_auth(Request $request) {  // ２段階目の認証
 
         $result = false;
 
         if($request->filled('tfa_token', 'mail')) {
 
-            $mail_verification = \App\Models\MailVerification::where('mail','=',$request->mail)->first();
-            $expiration = new Carbon($mail_verification->tfa_expiration);
+            $user = \App\Models\User::where('mail','=', $request->mail)->first();
+            $mail_verification = \App\Models\UserMailVerification::where('user_id','=', $user->id)->first();
+            $expiration = new Carbon($mail_verification->tfa_expires_at);
 
             if($mail_verification->tfa_token === $request->tfa_token && $expiration > now()) {
 
                 // パスワードの変更
-                $user = \App\Models\User::where('mail','=',$request->mail)->first();
                 $user->password = Hash::make($request->new_password);
                 $user->save();
 

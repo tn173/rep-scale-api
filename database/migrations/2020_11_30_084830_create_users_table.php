@@ -15,28 +15,40 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id')->comment('ユーザーID');
-            $table->enum('gender', ['MALE', 'FEMALE', 'OTHER'])->nullable()->comment('性別');
-            $table->date('birthday')->nullable()->comment('生年月日');
-            $table->double('height')->nullable()->comment('身長');
-            $table->string('mail', 100)->nullable()->comment('mail');
-            $table->string('password', 100)->nullable()->comment('password');
-            $table->string('api_token',60)->unique()->nullable();
+            $table->enum('gender', ['MALE', 'FEMALE', 'OTHER'])->nullable()->comment('性別')->default('OTHER');
+            $table->date('birthday')->nullable()->comment('生年月日')->default(date('1990-01-01'));
+            $table->double('height',4,1)->nullable()->comment('身長')->default(160);
+            $table->string('mail')->nullable()->comment('mail'); // メールアドレスのバリデーションはデータ登録時に行う
+            $table->string('password')->nullable()->comment('password'); // BCryptでHash化した60桁の文字列
             $table->timestamps();
+            $table->softDeletes();
+        });
+        DB::statement('ALTER TABLE users MODIFY mail varchar(50) BINARY');
+        DB::statement('ALTER TABLE users MODIFY password char(60) BINARY');
+
+        Schema::create('user_authentications', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('device_identifier')->comment('デバイス識別子')->nullable();
+            $table->string('access_token',36)->unique()->nullable();
+            $table->dateTime('access_token_expires_at')->nullable();
+            $table->string('refresh_token',36)->unique()->nullable();
+            $table->dateTime('refresh_token_expires_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
 
-        Schema::create('mail_verifications', function (Blueprint $table) {
+        Schema::create('user_mail_verifications', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('mail', 100)->unique()->comment('mail')->unique();;
-            $table->string('password', 100)->comment('password');
             $table->string('tfa_token')->nullable();
-            $table->dateTime('tfa_expiration')->nullable();
+            $table->dateTime('tfa_expires_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('user_measurements', function (Blueprint $table) {
             $table->increments('id')->comment('id');
-            $table->dateTime('date')->comment('測定日時');
-            $table->double('weight');
+            $table->dateTime('date')->comment('測定日時')->default(date('2021-01-01'));
+            $table->double('weight')->default(0);
             $table->double('BMI')->nullable();
             $table->double('body_fat_rate')->nullable();
             $table->double('subcutaneous_fat')->nullable();
@@ -65,13 +77,15 @@ class CreateUsersTable extends Migration
             $table->double('muscle_control')->nullable();
             $table->double('muscle_mass_rate')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
-        Schema::create('user_healthcares', function (Blueprint $table) {
+        Schema::create('user_steps', function (Blueprint $table) {
             $table->increments('id')->comment('id');
             $table->dateTime('date')->comment('日時');
             $table->double('steps')->comment('歩数');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -83,8 +97,9 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
-        Schema::dropIfExists('mail_verifications');
+        Schema::dropIfExists('user_authentications');
+        Schema::dropIfExists('user_mail_verifications');
         Schema::dropIfExists('user_measurements');
-        Schema::dropIfExists('user_healthcares');
+        Schema::dropIfExists('user_steps');
     }
 }

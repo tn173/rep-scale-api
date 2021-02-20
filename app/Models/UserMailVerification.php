@@ -4,13 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MailVerification extends Model
+class UserMailVerification extends Model
 {
+    use SoftDeletes;
+    
     protected $fillable = [
-        'mail',
-        'password',
+        'user_id',
         'tfa_token',
-        'tfa_expiration',
+        'tfa_expires_at',
     ];
 }

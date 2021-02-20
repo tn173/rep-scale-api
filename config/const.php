@@ -1,0 +1,8 @@
+<?php 
+
+return [
+
+'ACCESS_TOKEN_EXPIRATION' => '3',
+'REFRESH_TOKEN_EXPIRATION' => '30',
+
+];

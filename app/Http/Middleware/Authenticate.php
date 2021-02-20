@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Support\Str;
 use Closure;
 
 class Authenticate
@@ -16,10 +17,20 @@ class Authenticate
     public function handle($request, Closure $next)
     {
         $authorization = $request->header()['authorization'][0] ?? '';
-        $user = \App\Models\User::find($request->user_id);
-        if($authorization != '' && $user->api_token == $authorization){
-            return $next($request);
+        $user_authentication = \App\Models\UserAuthentication::where('user_id', $request->user_id)->where('device_identifier', $request->device_identifier)->first();
+        if($user_authentication != null && $authorization != ''){
+            if($user_authentication->access_token == $authorization && $user_authentication->access_token_expires_at > now()){
+                //API認証成功
+                return $next($request);
+            }else{
+                // 認証失敗
+                return [
+                    'result' => false,
+                    'message' => '認証情報がセットされていません'
+                ];
+            }
         }else{
+            // 認証失敗
             return [
                 'result' => false,
                 'message' => '認証情報がセットされていません'

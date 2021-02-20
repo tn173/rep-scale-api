@@ -4,7 +4,6 @@ namespace App\Http\Controllers\V1;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Http\Controllers\Controller;
@@ -20,23 +19,29 @@ class UserController extends Controller
     $user->height = $request->height;
     $user->mail = '';
     $user->password = '';
-    $user->api_token = Str::uuid();
     $user->save();
 
-    return ['result' => true, 'api_token' => $user->api_token, 'user_id' => $user->id]; 
-  }
+    $user_authentication = new \App\Models\UserAuthentication;
+    $user_authentication->user_id = $user->id;
+    $user_authentication->device_identifier = $request->device_identifier;
+    $user_authentication->access_token = Str::uuid();
+    $user_authentication->access_token_expires_at = now()->addDays(config('const.ACCESS_TOKEN_EXPIRATION'));
+    $user_authentication->refresh_token = Str::uuid();
+    $user_authentication->refresh_token_expires_at = now()->addDays(config('const.REFRESH_TOKEN_EXPIRATION'));
+    $user_authentication->save();
 
-  public function delete($id)
-  {
-    $user = \App\Models\User::find($id)->delete();
     return [
-      'result' => true
-    ];
+      'result' => true, 
+      'user_id' => $user->id, 
+      'access_token' => $user_authentication->access_token, 
+      'refresh_token' => $user_authentication->refresh_token
+    ]; 
+
   }
 
-  public function update(Request $request,$id)
+  public function update(Request $request)
   {
-    $user = \App\Models\User::where('id',$id)->first();
+    $user = \App\Models\User::where('id', $request->user_id)->first();
     $user->gender = $request->gender;
     $user->birthday = $request->birthday;
     $user->height = $request->height;
@@ -45,6 +50,17 @@ class UserController extends Controller
     return [
       'result' => true
     ];
+
+  }
+
+  public function delete(Request $request)
+  {
+    $user = \App\Models\User::find($request->user_id)->delete();
+
+    return [
+      'result' => true
+    ];
+
   }
 
 }
