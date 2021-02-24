@@ -41,6 +41,8 @@ class UsersTableSeeder extends Seeder
             'gender' => 'MALE',
             'birthday' => date("1990/01/01"),
             'height' => 175,
+            'mail' => '',
+            'password' => '',
         ]);
 
         UserAuthentication::create([
@@ -63,7 +65,7 @@ class UsersTableSeeder extends Seeder
 
         for ($i = 1; $i < 31; $i++){
             $date = mt_rand(Carbon::now()->subMonths(1)->timestamp,Carbon::now()->timestamp);
-            $weight = mt_rand(40,90);
+            $weight = mt_rand(60,70);
             $steps = mt_rand(2000,5000);
             UserMeasurement::create([
                 'user_id' => 1,

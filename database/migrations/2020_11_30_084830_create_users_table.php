@@ -28,7 +28,7 @@ class CreateUsersTable extends Migration
 
         Schema::create('user_authentications', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('device_identifier')->comment('デバイス識別子')->nullable();
+            $table->string('device_identifier',36)->default('default')->comment('デバイス識別子');
             $table->string('access_token',36)->unique()->nullable();
             $table->dateTime('access_token_expires_at')->nullable();
             $table->string('refresh_token',36)->unique()->nullable();

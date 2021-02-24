@@ -27,7 +27,7 @@ class UserController extends Controller
     $user_authentication->access_token = Str::uuid();
     $user_authentication->access_token_expires_at = now()->addDays(config('const.ACCESS_TOKEN_EXPIRATION'));
     $user_authentication->refresh_token = Str::uuid();
-    $user_authentication->refresh_token_expires_at = now()->addDays(config('const.REFRESH_TOKEN_EXPIRATION'));
+    $user_authentication->refresh_token_expires_at = now()->addDays(config('const.REFRESH_TOKEN_EXPIRATION_WITHOUT_LOGIN'));
     $user_authentication->save();
 
     return [
