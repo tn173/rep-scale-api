@@ -39,7 +39,7 @@ class CreateUsersTable extends Migration
 
         Schema::create('user_mail_verifications', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('tfa_token')->nullable();
+            $table->integer('tfa_token')->length(4)->nullable();
             $table->dateTime('tfa_expires_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -48,34 +48,19 @@ class CreateUsersTable extends Migration
         Schema::create('user_measurements', function (Blueprint $table) {
             $table->increments('id')->comment('id');
             $table->dateTime('date')->comment('測定日時')->default(date('2021-01-01'));
-            $table->double('weight')->default(0);
-            $table->double('BMI')->nullable();
-            $table->double('body_fat_rate')->nullable();
-            $table->double('subcutaneous_fat')->nullable();
-            $table->integer('visceral_fat')->nullable();
-            $table->double('body_water_rate')->nullable();
-            $table->double('muscle_rate')->nullable();
-            $table->double('bone_mass')->nullable();
-            $table->integer('BMR')->nullable();
-            $table->integer('body_type')->nullable();
-            $table->double('protein')->nullable();
-            $table->double('lean_body_weight')->nullable();
-            $table->double('muscle_mass')->nullable();
-            $table->integer('metabolic_age')->nullable();
-            $table->double('health_score')->nullable();
-            $table->integer('heart_rate')->nullable();
-            $table->double('heart_index')->nullable();
-            $table->double('fat_mass')->nullable();
-            $table->double('obesity_degree')->nullable();
-            $table->double('water_content')->nullable();
-            $table->double('protein_mass')->nullable();
-            $table->integer('mineral_salt')->nullable();
-            $table->double('best_visual_weight')->nullable();
-            $table->double('stand_weight')->nullable();
-            $table->double('weight_control')->nullable();
-            $table->double('fat_control')->nullable();
-            $table->double('muscle_control')->nullable();
-            $table->double('muscle_mass_rate')->nullable();
+            $table->integer('impedance')->length(8)->default(0);
+            $table->double('weight',4,1)->default(0);
+            $table->double('BMI',3,1)->nullable();
+            $table->double('body_fat_percentage',3,1)->nullable();
+            $table->double('muscle_kg',4,1)->nullable();
+            $table->double('water_percentage',3,1)->nullable();
+            $table->integer('VFAL')->length(2)->nullable();
+            $table->double('bone_kg',2,1)->nullable();
+            $table->integer('BMR')->length(5)->nullable();
+            $table->double('protein_percentage',3,1)->nullable();
+            $table->double('VF_percentage',3,1)->nullable();
+            $table->double('lose_fat_weight_kg',4,1)->nullable();
+            $table->double('body_standard',4,1)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -83,7 +68,7 @@ class CreateUsersTable extends Migration
         Schema::create('user_steps', function (Blueprint $table) {
             $table->increments('id')->comment('id');
             $table->dateTime('date')->comment('日時');
-            $table->double('steps')->comment('歩数');
+            $table->integer('steps')->comment('歩数');
             $table->timestamps();
             $table->softDeletes();
         });
