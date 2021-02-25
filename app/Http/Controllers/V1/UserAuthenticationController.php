@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
+use DateTime;
 
 class UserAuthenticationController extends Controller
 {
@@ -17,7 +18,7 @@ class UserAuthenticationController extends Controller
             $user_authentication->access_token = Str::uuid();
             $user_authentication->access_token_expires_at = now()->addDays(config('const.ACCESS_TOKEN_EXPIRATION'));
             $user_authentication->refresh_token = Str::uuid();
-            $user_authentication->refresh_token_expires_at = $user->mail == '' ? datetime(config('const.REFRESH_TOKEN_EXPIRATION_WITHOUT_LOGIN')) : now()->addDays(config('const.REFRESH_TOKEN_EXPIRATION'));
+            $user_authentication->refresh_token_expires_at = $user->mail == '' ? new DateTime(strval(config('const.REFRESH_TOKEN_EXPIRATION_WITHOUT_LOGIN'))) : now()->addDays(config('const.REFRESH_TOKEN_EXPIRATION'));
             $user_authentication->save();
 
             return [

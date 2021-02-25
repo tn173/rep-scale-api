@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use DateTime;
 
 class UserController extends Controller
 {
@@ -27,7 +28,7 @@ class UserController extends Controller
     $user_authentication->access_token = Str::uuid();
     $user_authentication->access_token_expires_at = now()->addDays(config('const.ACCESS_TOKEN_EXPIRATION'));
     $user_authentication->refresh_token = Str::uuid();
-    $user_authentication->refresh_token_expires_at = datetime(config('const.REFRESH_TOKEN_EXPIRATION_WITHOUT_LOGIN'));
+    $user_authentication->refresh_token_expires_at = new DateTime(strval(config('const.REFRESH_TOKEN_EXPIRATION_WITHOUT_LOGIN')));
     $user_authentication->save();
 
     return [
