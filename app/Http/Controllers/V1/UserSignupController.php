@@ -67,7 +67,7 @@ class UserSignupController extends Controller
             $mail_verification = \App\Models\UserMailVerification::where('user_id','=', $request->user_id)->first();
             $expiration = new Carbon($mail_verification->tfa_expires_at);
 
-            if($mail_verification->tfa_token === $request->tfa_token && $expiration > now()) {
+            if($mail_verification->tfa_token === $request->tfa_token && $expiration->gt(Carbon::now())) {
 
                 // サインアップ
                 $user = \App\Models\User::find($request->user_id);

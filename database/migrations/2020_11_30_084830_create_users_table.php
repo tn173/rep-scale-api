@@ -39,7 +39,7 @@ class CreateUsersTable extends Migration
 
         Schema::create('user_mail_verifications', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('tfa_token')->length(4)->nullable();
+            $table->string('tfa_token',4)->nullable();
             $table->dateTime('tfa_expires_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
